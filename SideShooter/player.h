@@ -14,7 +14,9 @@ public:
 	int getBoundY(){return boundy;}
 	int getX(){return x;}
 	int getY(){return y;}
-	void removeLife(){lives--;}
+	int getLives() { return lives; }
+	void removeLife();
+
 private:
 	int x;
 	int y;
@@ -23,6 +25,8 @@ private:
 	int boundx;
 	int boundy;
 	int score;
+	int damageLvl;
+	static const char* kirbs[5];
 	ALLEGRO_BITMAP *image;
 };
 #endif

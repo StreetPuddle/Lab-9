@@ -53,6 +53,7 @@ void Arrow::CollideArrow(ghost ghosts[], int cSize)
 				{
 					live = false;
 					ghosts[j].setLive(false);
+					hit++;
 				}
 			}
 		}

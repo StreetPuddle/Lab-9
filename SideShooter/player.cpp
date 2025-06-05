@@ -10,11 +10,12 @@ player::~player()
 }
 player::player(int HEIGHT)
 {
-
-	image = al_load_bitmap("Kirby.png");
+	
+	image = al_load_bitmap(kirbs[0]);
 	x = 20;
 	y = HEIGHT / 2;
 	lives = 5;
+	damageLvl = 0;
 	speed = 7;
 	boundx = al_get_bitmap_width(image);
 	boundy = al_get_bitmap_height(image);
@@ -33,8 +34,8 @@ void player::MoveUp()
 void player::MoveDown(int HEIGHT)
 {
 	y += speed;
-	if(y > HEIGHT)
-		y = HEIGHT;
+	if(y > HEIGHT - boundy )
+		y = HEIGHT - boundy;
 }
 void player::MoveLeft()
 {
@@ -47,4 +48,15 @@ void player::MoveRight()
 	x += speed;
 	if(x > 300)
 		x = 300;
+}
+
+
+const char* player::kirbs[5] = { "kirby0.png", "kirby1.png", "kirby2.png", "kirby3.png", "kirby4.png"
+};
+void player::removeLife() {
+	lives--;
+	damageLvl++;
+	al_destroy_bitmap(image);
+	image = al_load_bitmap(kirbs[damageLvl]);
+	
 }

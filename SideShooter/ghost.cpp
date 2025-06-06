@@ -54,10 +54,10 @@ void ghost::Collideghost(player &Player)
 {
 	if(live)
 	{
-		if( x - boundx < Player.getX() + Player.getBoundX() &&
-			x + boundx > Player.getX() - Player.getBoundX() &&
-			y - boundy < Player.getY() + Player.getBoundY() &&
-			y + boundy > Player.getY() - Player.getBoundY())
+		if( x < Player.getX() + Player.getBoundX() &&//corrected bounds
+			x + boundx > Player.getX() &&
+			y < Player.getY() + Player.getBoundY() &&
+			y + boundy > Player.getY())
 		{
 			Player.removeLife();
 			live = false;

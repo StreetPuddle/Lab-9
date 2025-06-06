@@ -9,13 +9,14 @@
 #include "Arrow.h"
 #include <iostream>
 
-void printEndScreen(ALLEGRO_FONT* font);
+//prints when the player no longer has lives and displays score
+void printEndScreen(ALLEGRO_FONT* font, int hits);
 
 int main(void)
 {
 
 	const int WIDTH = 800;
-	const int HEIGHT = 400;
+	const int HEIGHT = 450;
 	const int NUM_ArrowS = 5;
 	const int NUM_ghostS = 10;
 	enum KEYS { UP, DOWN, LEFT, RIGHT, SPACE };
@@ -77,7 +78,7 @@ int main(void)
 			if (keys[UP])
 				myPlayer.MoveUp();
 			if (keys[DOWN])
-				myPlayer.MoveDown(HEIGHT);
+				myPlayer.MoveDown(HEIGHT - 50);
 			if (keys[LEFT])
 				myPlayer.MoveLeft();
 			if (keys[RIGHT])
@@ -86,17 +87,15 @@ int main(void)
 			for (int i = 0; i < NUM_ArrowS; i++)
 				Arrows[i].UpdateArrow(WIDTH);
 			for (int i = 0; i < NUM_ghostS; i++)
-				ghosts[i].Startghost(WIDTH, HEIGHT);
+				ghosts[i].Startghost(WIDTH, HEIGHT - 50);
 			for (int i = 0; i < NUM_ghostS; i++)
 				ghosts[i].Updateghost();
 			for (int i = 0; i < NUM_ArrowS; i++)
 				Arrows[i].CollideArrow(ghosts, NUM_ghostS);
 			for (int i = 0; i < NUM_ghostS; i++)
 				ghosts[i].Collideghost(myPlayer);
-
-			if (myPlayer.getLives() <= 0) {
+			if (myPlayer.getLives() <= 0) {//when player runs out of lives, start game over screen
 				gameOver = true;
-				printEndScreen(font);
 			}
 		}
 		else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
@@ -153,22 +152,35 @@ int main(void)
 				break;
 			}
 		}
-
+		
 		if (redraw && al_is_event_queue_empty(event_queue))
 		{
-
+			
 			redraw = false;
+			if (!gameOver) {
+				
+				myPlayer.DrawPlayer();
+				for (int i = 0; i < NUM_ArrowS; i++)
+					Arrows[i].DrawArrow();
+				for (int i = 0; i < NUM_ghostS; i++)
+					ghosts[i].Drawghost();
+				//al_draw_text(font, al_map_rgb(255, 255, 255), 250, 300, 0, "TEST1");//test line
+				//std::cout << "Life:" << myPlayer.getLives() << std::endl;//test line
+				myPlayer.drawLives(font, Arrows[0].getHit());
+				al_flip_display();
+				al_clear_to_color(al_map_rgb(0, 0, 0));
+			}
+			else if (gameOver) {
 
-			myPlayer.DrawPlayer();
-			for (int i = 0; i < NUM_ArrowS; i++)
-				Arrows[i].DrawArrow();
-			for (int i = 0; i < NUM_ghostS; i++)
-				ghosts[i].Drawghost();
-			al_draw_text(font, al_map_rgb(255, 255, 255), 250, 300, 0, "TEST1");
-			std::cout << "TEST2" << std::endl;
-			al_flip_display();
-			al_clear_to_color(al_map_rgb(0, 0, 0));
-
+				printEndScreen(font, Arrows[0].getHit());
+				while (true) {
+					al_wait_for_event(event_queue, &ev);
+					if (ev.type == ALLEGRO_EVENT_KEY_DOWN || ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {//any key to close
+						done = true;
+						break;
+					}
+				}
+			}
 		}
 
 	}
@@ -179,11 +191,12 @@ int main(void)
 	return 0;
 }
 
-void printEndScreen(ALLEGRO_FONT* font) {
+//prints when the player no longer has lives and displays score
+void printEndScreen(ALLEGRO_FONT* font, int hits) {
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_draw_text(font, al_map_rgb(255, 0, 0), 250, 100, 0, "Game Over");
-	al_draw_text(font, al_map_rgb(255, 255, 255), 125, 200, 0, "Enemies Defeated: 7");
-	std::cout << "TEST3" << std::endl;
+	al_draw_textf(font, al_map_rgb(255, 255, 255), 125, 200, 0, "Enemies Defeated: %d", hits);
+	al_draw_text(font, al_map_rgb(255, 255, 255), 80, 300, 0, "Press any key to close");
 	al_flip_display();
-	al_rest(100);
+	std::cout << "TEST3" << std::endl;
 }

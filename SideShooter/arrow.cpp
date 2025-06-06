@@ -40,15 +40,15 @@ void Arrow::UpdateArrow(int WIDTH)
 }
 void Arrow::CollideArrow(ghost ghosts[], int cSize)
 {
-	if(live)
+	if (live)
 	{
-		for(int j =0; j < cSize; j++)
+		for (int j = 0; j < cSize; j++)
 		{
-			if(ghosts[j].getLive())
+			if (ghosts[j].getLive())
 			{
-				if(x > (ghosts[j].getX() - ghosts[j].getBoundX()) &&
+				if (x > (ghosts[j].getX() - ghosts[j].getBoundX()) &&
 					x < (ghosts[j].getX() + ghosts[j].getBoundX()) &&
-					y > (ghosts[j].getY() - ghosts[j].getBoundY()) &&
+					y >(ghosts[j].getY() - ghosts[j].getBoundY()) &&
 					y < (ghosts[j].getY() + ghosts[j].getBoundY()))
 				{
 					live = false;

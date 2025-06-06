@@ -15,7 +15,7 @@ player::player(int HEIGHT)
 	x = 20;
 	y = HEIGHT / 2;
 	lives = 5;
-	damageLvl = 0;
+	damageLvl = 0;//alligns with sprite array index
 	speed = 7;
 	boundx = al_get_bitmap_width(image);
 	boundy = al_get_bitmap_height(image);
@@ -34,7 +34,7 @@ void player::MoveUp()
 void player::MoveDown(int HEIGHT)
 {
 	y += speed;
-	if(y > HEIGHT - boundy )
+	if(y > HEIGHT - boundy )//fixed bottom bound being a limit
 		y = HEIGHT - boundy;
 }
 void player::MoveLeft()
@@ -50,13 +50,24 @@ void player::MoveRight()
 		x = 300;
 }
 
+//array to house the sprites
+const char* player::kirbs[6] = { "kirby0.png", "kirby1.png", "kirby2.png", "kirby3.png", "kirby4.png", "ship2.png"};
 
-const char* player::kirbs[5] = { "kirby0.png", "kirby1.png", "kirby2.png", "kirby3.png", "kirby4.png"
-};
+//decrements lives, and sets sprite to next damaged sprite within the array
 void player::removeLife() {
 	lives--;
 	damageLvl++;
 	al_destroy_bitmap(image);
 	image = al_load_bitmap(kirbs[damageLvl]);
-	
+}
+
+//draws sprites at bottom of screen to represent lives left
+void player::drawLives(ALLEGRO_FONT* font, int hits) {
+	ALLEGRO_BITMAP* tempImage = al_load_bitmap(kirbs[0]);
+	int spaced = 20;
+	for (int i = 0; i < lives; i++) {
+		al_draw_bitmap(tempImage, spaced, 400, 0);
+		spaced += boundy + 10;
+	}
+	al_draw_textf(font, al_map_rgb(255, 255, 255), 320, 400, 0, "Enemies killed: %d", hits);
 }

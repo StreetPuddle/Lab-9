@@ -1,5 +1,8 @@
 #ifndef PLAYERH
 #define PLAYERH
+
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 class player
 {
 public:
@@ -16,6 +19,7 @@ public:
 	int getY(){return y;}
 	int getLives() { return lives; }
 	void removeLife();
+	void drawLives(ALLEGRO_FONT* font, int hits);
 
 private:
 	int x;
@@ -26,7 +30,7 @@ private:
 	int boundy;
 	int score;
 	int damageLvl;
-	static const char* kirbs[5];
+	static const char* kirbs[6];
 	ALLEGRO_BITMAP *image;
 };
 #endif
